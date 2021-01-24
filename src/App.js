@@ -25,9 +25,10 @@ function App() {
 
   return (
     <div className={classes.parent}>
-      <div> SEARCH</div>
+      <div>
+        <h1>ECS - BOOKS REPO</h1>
+      </div>
       <MyComponents />
-      <div> Footer</div>
     </div>
   );
 }
@@ -38,7 +39,7 @@ const useStyles = makeStyles({
   parent: {
     display: "grid",
     placeItems: "center",
+    gridTemplateRows: "minmax(80px, 25%) 1fr",
     // backgroundColor: "red",
-    gridTemplateRows: "minmax(100px, 25%) 1fr minmax(80px, 15%)",
   },
 });

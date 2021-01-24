@@ -4,13 +4,16 @@ import { useDataLayerValue } from "../Reducer/DataLayer";
 import { Button, TextField, Typography } from "@material-ui/core";
 import sortArray from "../Methods/sortArray";
 import searchData from "../Methods/searchData";
+import { addtoCart, buyThis } from "../Methods/dispatchMethod";
+import Search from "./Search";
+import StarComp from "./StarComp";
 
 function MyComponents() {
   const [state, dispatch] = useDataLayerValue();
 
   const [rev, setRev] = React.useState(false);
   const [startI, setStartI] = React.useState(0);
-  const [searchVal, setSearchVal] = React.useState("");
+
   const [passData, setPassData] = React.useState([]);
 
   const { data, cart, buy } = state;
@@ -19,29 +22,11 @@ function MyComponents() {
     setPassData(data);
   }, []);
 
-
-  
   React.useEffect(() => {
     setPassData(data.slice(startI, startI + 10));
   }, [startI]);
 
-  //   console.log(state, passData);
-  //   var tempData = [];
-
-  const addtoCart = (val) =>
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: { cart: val },
-    });
-
-  const buyThis = (val) =>
-    dispatch({
-      type: "BUY",
-      payload: { buy: val },
-    });
-
   const sortOnRating = () => {
-    // console.log(tempData);
     setRev(!rev);
     const val = sortArray(passData, rev);
     setPassData(val);
@@ -56,40 +41,33 @@ function MyComponents() {
     setStartI((startI) => startI + 10);
   };
 
-  const searchInData = () => {
-    console.log(searchVal);
-    searchData(searchVal, data);
-    // const searchedData = searchData(searchVal, data);
-    // passData(searchedData);
-  };
-
   return (
-    <div className="container-fluid bg-danger p-2">
-      <div className="float-right">
-        <TextField
-          variant="outlined"
-          label="Search"
-          placeholder="Search"
-          type="string"
-          value={searchVal}
-          onChange={(e) => setSearchVal(e.target.value)}
-        />
-        <Button variant="contained" onClick={() => searchInData()}>
-          Search
-        </Button>
-        <Button variant="contained" onClick={() => prev10()}>
+    <div className="container-fluid p-2">
+      <div className="container-fluid text-center">
+        <Search data={passData} />
+        <Button variant="contained" color="primary" onClick={() => prev10()}>
           Prev
         </Button>
-        <Button variant="contained" onClick={() => next10()}>
+        <Button variant="contained" color="primary" onClick={() => next10()}>
           Next
         </Button>
-        <Button variant="contained" onClick={() => sortOnRating()}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => sortOnRating()}
+        >
           Sort
         </Button>
-        <Button variant="contained">Cart {cart.length}</Button>
-        <Button variant="contained">Buy {buy.length}</Button>
       </div>
-      <table className="table table-bordered table-responsiv bg-success">
+      <div className="float-right">
+        <Button variant="contained" color="primary">
+          Cart {cart.length}
+        </Button>
+        <Button variant="contained" color="primary">
+          Buy {buy.length}
+        </Button>
+      </div>
+      <table className="table table-bordered bg-success text-center">
         <thead>
           <th scope="col">ID</th>
           <th scope="col">Title {"&"} Authors</th>
@@ -128,14 +106,16 @@ function MyComponents() {
                 </td>
 
                 <td>
-                  <div className="container" style={{ width: "100px" }}>
+                  <div className="container" style={{ width: "" }}>
                     <Typography
                       noWrap
                       variant="subtitle1"
                       component="p"
                       color="black"
                     >
-                      {Math.round(val?.average_rating)}
+                      <StarComp
+                        val={Math.round(val?.average_rating)}
+                      />
                     </Typography>
                     <Typography
                       noWrap
@@ -148,32 +128,27 @@ function MyComponents() {
                   </div>
                 </td>
                 <td>
-                  <div className="container" style={{ width: "100px" }}>
+                  <div className="container" style={{ width: "150px" }}>
                     <Typography
                       noWrap
                       variant="subtitle1"
                       component="p"
                       color="black"
                     >
-                      {val?.language_code?.toUpperCase()}
-                    </Typography>
-                    <Typography
-                      noWrap
-                      variant="subtitle1"
-                      component="p"
-                      color="black"
-                    >
-                      {val?.isbn}
+                      {val?.language_code?.toUpperCase() +
+                        " (" +
+                        val?.isbn +
+                        ")"}
                     </Typography>
                   </div>
                 </td>
                 <td>{val?.price}</td>
-                <td>
+                <td className="text-center">
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ width: "150px" }}
-                    onClick={() => addtoCart(val)}
+                    onClick={() => addtoCart(val, dispatch)}
                   >
                     <Typography noWrap variant="subtitle1" component="p">
                       Add To Cart
@@ -182,7 +157,7 @@ function MyComponents() {
                   <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => buyThis(val)}
+                    onClick={() => buyThis(val, dispatch)}
                   >
                     Buy
                   </Button>

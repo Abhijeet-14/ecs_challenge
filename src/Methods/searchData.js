@@ -10,84 +10,55 @@ const searchData = (sentence, data) => {
 
   var tempData = [];
 
-  data.forEach((element) => {
+  data?.forEach(async (element) => {
+    console.log("hello");
     var flag = false;
     var nt = element.length;
     var at = element.length;
 
-    const titlesList = element?.title
-      ?.split(".")
-      ?.join("")
-      ?.split(",")
-      ?.join("")
-      ?.split(" ");
-    const authorsList = element?.authors
-      ?.split(".")
-      ?.join("")
-      ?.split(",")
-      ?.join("")
-      ?.split(" ");
-    // const authorsList = splitSent(element?.authors);
     if (!flag) {
-      wordList.forEach((word) => {
-        titlesList.forEach((title) => {
-          if (word === title) {
-            flag = true;
-            return (tempData += [...tempData, element]);
+      await wordList.forEach((word) => {
+        var m = word.length;
+        for (var i = 0; i < nt - m + 1; i++) {
+          var j = 0;
+          for (j = 0; j < m; j++) {
+            if (word.charAt(j) !== element?.title.charAt(i + j)) {
+              break;
+            }
           }
-        });
+
+          if (j === m) {
+            console.log(element);
+            flag = true;
+            tempData += [...tempData, element];
+            break;
+          }
+        }
       });
     }
     if (!flag) {
-      wordList.forEach((word) => {
-        authorsList.forEach((author) => {
-          if (word === author) {
-            flag = true;
-            return (tempData += [...tempData, element]);
+      await wordList.forEach((word) => {
+        var m = word.length;
+        for (var i = 0; i < at - m + 1; i++) {
+          var j = 0;
+          for (j = 0; j < m; j++) {
+            if (word.charAt(j) !== element?.authors.charAt(i + j)) {
+              break;
+            }
           }
-        });
+
+          if (j === m) {
+            console.log(element);
+            flag = true;
+            tempData += [...tempData, element];
+            break;
+          }
+        }
       });
     }
-
-    // if (!flag) {
-    //   wordList.forEach((word) => {
-    //     var m = word.length;
-    //     for (var i = 0; i < nt - m + 1; i++) {
-    //       var j = 0;
-    //       for (j = 0; j < m; j++) {
-    //         if (word.charAt(j) !== element?.title.charAt(i + j)) {
-    //           break;
-    //         }
-    //       }
-
-    //       if (j === m) {
-    //         tempData += [...tempData, element];
-    //         return;
-    //       }
-    //     }
-    //   });
-    // }
-    // if (!flag) {
-    //   wordList.forEach((word) => {
-    //     var m = word.length;
-    //     for (var i = 0; i < at - m + 1; i++) {
-    //       var j = 0;
-    //       for (j = 0; j < m; j++) {
-    //         if (word.charAt(j) !== element?.authors.charAt(i + j)) {
-    //           break;
-    //         }
-    //       }
-
-    //       if (j === m) {
-    //         tempData += [...tempData, element];
-    //         return;
-    //       }
-    //     }
-    //   });
-    // }
-
-    console.log("SearchedData: ", tempData);
   });
+  console.log("SearchedData: ", tempData);
+  return tempData;
 };
 
 export default searchData;
@@ -98,3 +69,37 @@ export default searchData;
 //   return sent?.split(".")?.join("")?.split(",")?.join("")?.split(" ");
 //   //   );
 // };
+
+// const titlesList = element?.title
+//   ?.split(".")
+//   ?.join("")
+//   ?.split(",")
+//   ?.join("")
+//   ?.split(" ");
+// const authorsList = element?.authors
+//   ?.split(".")
+//   ?.join("")
+//   ?.split(",")
+//   ?.join("")
+//   ?.split(" ");
+// const authorsList = splitSent(element?.authors);
+// if (!flag) {
+//   wordList.forEach((word) => {
+//     titlesList.forEach((title) => {
+//       if (word === title) {
+//         flag = true;
+//         return (tempData += [...tempData, element]);
+//       }
+//     });
+//   });
+// }
+// if (!flag) {
+//   wordList.forEach((word) => {
+//     authorsList.forEach((author) => {
+//       if (word === author) {
+//         flag = true;
+//         return (tempData += [...tempData, element]);
+//       }
+//     });
+//   });
+// }
