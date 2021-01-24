@@ -1,75 +1,19 @@
 import React from "react";
-import { useDataLayerValue } from "../Reducer/DataLayer";
 import { Link } from "react-router-dom";
 import { Button, TextField, Typography } from "@material-ui/core";
-import sortArray from "../Methods/sortArray";
-import searchData from "../Methods/searchData";
-import { addtoCart, buyThis } from "../Methods/dispatchMethod";
-import Search from "./Search";
 import StarComp from "./StarComp";
+import { useDataLayerValue } from "../Reducer/DataLayer";
 
-function MyComponents() {
-  const [state, dispatch] = useDataLayerValue();
-
-  const [rev, setRev] = React.useState(false);
-  const [startI, setStartI] = React.useState(0);
-
-  const [passData, setPassData] = React.useState([]);
-
-  const { data, cart, buy } = state;
-//   setPassData(data.));
-
-  React.useEffect(() => {
-    setPassData(data.slice(0, 10));
-  }, []);
-
-  React.useEffect(() => {
-    setPassData(data.slice(startI, startI + 10));
-  }, [startI]);
-
-  const sortOnRating = () => {
-    setRev(!rev);
-    const val = sortArray(passData, rev);
-    setPassData(val);
-    return -1;
-  };
-
-  const prev10 = () => {
-    setStartI((startI) => startI - 10);
-  };
-
-  const next10 = () => {
-    setStartI((startI) => startI + 10);
-  };
+function CartCom(data) {
+  const [{ cart }, dispatch] = useDataLayerValue();
 
   return (
-    <div className="container-fluid p-2">
-      <div className="container-fluid text-center">
-        <Search data={passData} />
-        <Button variant="contained" color="primary" onClick={() => prev10()}>
-          Prev
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => next10()}>
-          Next
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => sortOnRating()}
-        >
-          Sort
-        </Button>
-      </div>
-      <div className="float-right">
-        <Link to="/cart">
-          <Button variant="contained" color="primary">
-            Cart {cart.length}
-          </Button>
-        </Link>
+    <div>
+      <Link to="/">
         <Button variant="contained" color="primary">
-          Buy {buy.length}
+          BACK
         </Button>
-      </div>
+      </Link>
       <table className="table table-bordered bg-success text-center">
         <thead>
           <th scope="col">ID</th>
@@ -77,10 +21,9 @@ function MyComponents() {
           <th scope="col">Average Rating {"&"} Count</th>
           <th scope="col">Languge {"&"} ISBN</th>
           <th scope="col">price</th>
-          <th scope="col">Buy</th>
         </thead>
         <tbody>
-          {passData?.map((val, index) => {
+          {cart?.map((val, index) => {
             // tempData = [...tempData, val];
             return (
               <tr>
@@ -144,25 +87,6 @@ function MyComponents() {
                   </div>
                 </td>
                 <td>{val?.price}</td>
-                <td className="text-center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ width: "150px" }}
-                    onClick={() => addtoCart(val, dispatch)}
-                  >
-                    <Typography noWrap variant="subtitle1" component="p">
-                      Add To Cart
-                    </Typography>
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => buyThis(val, dispatch)}
-                  >
-                    Buy
-                  </Button>
-                </td>
               </tr>
             );
           })}
@@ -172,4 +96,4 @@ function MyComponents() {
   );
 }
 
-export default MyComponents;
+export default CartCom;

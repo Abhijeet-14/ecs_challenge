@@ -4,7 +4,8 @@ import MyComponents from "./Components/MyComponents";
 import { useDataLayerValue } from "./Reducer/DataLayer";
 // import logo from './logo.svg';
 // import './App.css';
-
+import { Route, Switch } from "react-router-dom";
+import CartCom from "./Components/CartCom";
 function App() {
   const classes = useStyles();
   const [state, dispatch] = useDataLayerValue();
@@ -28,7 +29,14 @@ function App() {
       <div>
         <h1>ECS - BOOKS REPO</h1>
       </div>
-      <MyComponents />
+      <Switch>
+        <Route path="/Cart">
+          <CartCom data={state.cart}/>
+        </Route>
+        <Route path="/">
+          <MyComponents />
+        </Route>
+      </Switch>
     </div>
   );
 }
